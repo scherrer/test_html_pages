@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iframe Tester</title>
+    <meta charset="UTF-8" />
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        #controls { margin-bottom: 20px; }
+        label { margin-right: 10px; }
+        input[type="text"] { width: 400px; padding: 5px; margin-right: 10px; }
+        button { padding: 5px 10px; }
+        iframe { width: 100%; height: 300px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+    <h1>Iframe Content Tester</h1>
+
+    <div id="controls">
+        <label for="pageName">Page:</label>
+        <input type="text" id="pageName" value="param_display_page.html" readonly>
+        <span>?</span>
+        <label for="queryParams">Parameters:</label>
+        <input type="text" id="queryParams" value="name=Test&value=123">
+        <button onclick="updateIframe()">Load/Update Iframe</button>
+    </div>
+
+    <iframe id="testIframe" src="param_display_page.html?name=Initial&value=Default"></iframe>
+
+    <script>
+        const pageNameInput = document.getElementById('pageName');
+        const queryParamsInput = document.getElementById('queryParams');
+        const iframe = document.getElementById('testIframe');
+
+        function updateIframe() {
+            const page = pageNameInput.value.trim();
+            let params = queryParamsInput.value.trim();
+            
+            // Basic validation: ensure page is not empty
+            if (!page) {
+                alert("Page name cannot be empty.");
+                return;
+            }
+
+            // Construct the new src
+            let newSrc = page;
+            if (params) {
+                // Remove leading '?' if user accidentally types it
+                if (params.startsWith('?')) {
+                    params = params.substring(1);
+                }
+                newSrc += '?' + params;
+            }
+            
+            iframe.src = newSrc;
+            console.log("Updating iframe src to:", newSrc);
+        }
+
+        // Optional: Update iframe when Enter key is pressed in the input field
+        queryParamsInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission if it were in a form
+                updateIframe();
+            }
+        });
+
+        // Initial load message in console for clarity
+        console.log("Initial iframe src:", iframe.src);
+    </script>
+
+</body>
+</html>
